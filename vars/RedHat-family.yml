@@ -1,0 +1,9 @@
+---
+taskd_prerequisites:
+  - cmake
+  - make
+  - gcc-c++
+  - gnutls-devel
+  - gnutls-utils
+  - libuuid-devel
+  - which #workaround until taskd 1.2 then generate script fixed

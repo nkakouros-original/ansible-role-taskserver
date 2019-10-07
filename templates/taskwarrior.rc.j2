@@ -1,0 +1,13 @@
+## Taskserver sync info
+
+taskd.certificate={{ taskd_selfsigned_clients_download_dir
+                     | replace('/', '\/')}}\/{{
+                     item.name | replace(' ', '_') }}.cert.pem
+taskd.key={{ taskd_selfsigned_clients_download_dir
+                     | replace('/', '\/')}}\/{{
+                     item.name | replace(' ', '_') }}.key.pem
+taskd.ca={{ taskd_selfsigned_clients_download_dir
+                     | replace('/', '\/')}}\/ca.cert.pem
+taskd.server={{ taskd_server }}:{{ taskd_port }}
+taskd.credentials={{ item.organization }}\/{{ item.name }}\/{{
+                      _taskd_user_ids.files[index].path | basename  }}

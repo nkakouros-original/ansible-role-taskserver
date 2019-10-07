@@ -1,0 +1,11 @@
+## Taskserver sync info
+
+taskd.certificate={{ item.name | replace(' ', '_') }}.cert.pem
+taskd.key= {{ item.name | replace(' ', '_') }}.key.pem
+taskd.ca=ca.cert.pem
+taskd.server={{ taskd_server }}:{{ taskd_port }}
+taskd.credentials={{ item.organization }}\/{{ item.name }}\/{{
+                      _taskd_user_ids.files[index].path | basename  }}
+android.sync.periodical=60
+android.sync.onchange=3
+android.sync.onerror=10

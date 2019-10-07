@@ -1,0 +1,13 @@
+---
+
+- name: Install Taskd prerequisites with yum
+  yum:
+    name: "{{ taskd_prerequisites }}"
+    state: present
+    update_cache: true
+
+- name: Install certtool with yum
+  yum:
+    name: gnutls-utils
+    state: present
+  when: taskd_selfsigned | bool

@@ -1,0 +1,28 @@
+---
+
+- name: Create data folder
+  file:
+    path: "{{ taskd_data_location }}"
+    owner: "{{ taskd_user }}"
+    group: "{{ taskd_group }}"
+    mode: 0o755
+    state: directory
+
+- name: Set permanent TASKDDATA variable
+  copy:
+    content: "export TASKDDATA={{ taskd_data_location }}"
+    dest: /etc/profile.d/taskd.sh
+
+- name: Init datafolder
+  command: "taskd init"
+  args:
+    creates: "{{ taskd_data_location }}/config"
+  environment:
+    TASKDDATA: "{{ taskd_data_location }}"
+
+- name: Create config file for taskd
+  template:
+    src: taskd_config.jinja2
+    dest: "{{ taskd_data_location }}/config"
+    owner: "{{ taskd_user }}"
+    group: "{{ taskd_group }}"

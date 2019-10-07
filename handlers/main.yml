@@ -1,0 +1,7 @@
+---
+
+- name: Restart taskd service
+  service:
+    name: taskd
+    state: restarted
+  listen: taskd restart service

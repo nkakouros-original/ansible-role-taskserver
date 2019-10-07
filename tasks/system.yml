@@ -1,0 +1,13 @@
+---
+
+- name: Create taskd group
+  group:
+    name: "{{ taskd_group }}"
+    state: present
+
+- name: Create taskd user
+  user:
+    name: "{{ taskd_user }}"
+    group: "{{ taskd_group }}"
+    state: present
+    createhome: false

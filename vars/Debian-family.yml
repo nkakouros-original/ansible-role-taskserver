@@ -1,0 +1,8 @@
+---
+taskd_prerequisites:
+  - cmake
+  - make
+  - g++
+  - libgnutls-dev
+  - uuid-dev
+  - curl

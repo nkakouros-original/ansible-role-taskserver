@@ -1,0 +1,36 @@
+---
+
+galaxy_info:
+  role_name: tterranigma.taskserver
+  author: Nikolaos Kakouros
+  description: Installs the Taskwarrior taskserver (taskd)
+
+  license: GPLv3
+
+  min_ansible_version: 2.5
+
+  platforms:
+    - name: EL
+      versions:
+        - 7
+
+    - name: Ubuntu
+      versions:
+        - xenial
+        - trusty
+        - precise
+
+    - name: Debian
+      versions:
+        - stretch
+        - jessie
+        - wheezy
+
+  categories:
+    - taskwarrior
+    - taskserver
+    - taskd
+    - taskdserver
+    - todoserver
+
+dependencies: []

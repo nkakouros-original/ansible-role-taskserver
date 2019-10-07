@@ -1,0 +1,60 @@
+---
+
+- name: Create users and certs folder
+  file:
+    path: "{{ taskd_user_cert_location }}"
+    owner: "{{ taskd_user }}"
+    group: "{{ taskd_group }}"
+    mode: 0o755
+    state: directory
+
+- name: Copy selfsigning vars file to location
+  template:
+    src: ssl_vars.jinja2
+    dest: "{{ taskd_install_location }}/pki/vars"
+    owner: "{{ taskd_user }}"
+    group: "{{ taskd_group }}"
+
+- name: Run generate cert script
+  shell: ./generate
+  args:
+    creates: "{{ taskd_install_location }}/pki/ca.key.pem"
+    chdir: "{{ taskd_install_location }}/pki/"
+  register: taskd_server_certs
+
+- name: Copy generated certs to data location
+  copy:
+    src: "{{ taskd_install_location }}/pki/{{ item }}"
+    dest: "{{ taskd_data_location }}/{{ item }}"
+    owner: "{{ taskd_user }}"
+    group: "{{ taskd_group }}"
+    remote_src: true
+  loop:
+    - server.cert.pem
+    - server.key.pem
+    - server.crl.pem
+    - ca.cert.pem
+    - ca.key.pem
+  when: taskd_server_certs is changed
+
+- name: Run generate client cert script
+  shell: "./generate.client {{ item.name|replace(' ', '_') }}"
+  args:
+    chdir: "{{ taskd_install_location }}/pki/"
+    creates:
+      "{{ taskd_user_cert_location }}/{{ item.name|replace(' ', '_') }}.key.pem"
+  register: result
+  loop: "{{ taskd_users }}"
+
+- name: Move generated user certs
+  command: >-
+    mv
+      {{ taskd_install_location }}/pki/{{ item.name|replace(' ', '_')
+        }}.cert.pem
+      {{ taskd_install_location }}/pki/{{ item.name|replace(' ', '_')
+        }}.key.pem
+      {{ taskd_user_cert_location }}/
+  when: result.results[index] is changed
+  loop: "{{ taskd_users }}"
+  loop_control:
+    index_var: index

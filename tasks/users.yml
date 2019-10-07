@@ -1,0 +1,40 @@
+---
+
+- name: Add organizations
+  command: "taskd add org '{{ item.organization }}'"
+  environment:
+    TASKDDATA: "{{ taskd_data_location }}"
+  loop: "{{ taskd_users }}"
+  register: result
+  failed_when:
+    - result is failed
+    - result.stdout is not search('already exists')
+  changed_when:
+    - result.stdout is search('Created organization')
+
+- name: Get list of existing users
+  shell: >-
+    grep -r user {{ taskd_data_location }}/orgs/ \
+    | awk -F = {'print $2'}
+  register: _taskd_existing_users
+  changed_when: false
+
+- name: Add users
+  command:
+    "taskd add user '{{ item.organization }}' '{{ item.name }}'"
+  environment:
+    TASKDDATA: "{{ taskd_data_location }}"
+  loop: "{{ taskd_users }}"
+  register: taskd_user_key
+  when: item.name not in _taskd_existing_users.stdout_lines
+
+- name: Get list of user ids
+  find:
+    paths: "{{ taskd_data_location }}/orgs"
+    file_type: directory
+    recurse: true
+    depth: 3
+    patterns:
+      - '^[a-f0-9]{8}-([a-f0-9]{4}-){3}[a-f0-9]{12}$'
+    use_regex: true
+  register: _taskd_user_ids

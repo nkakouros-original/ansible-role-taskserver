@@ -1,0 +1,18 @@
+---
+
+- include: variables.yml
+
+- include: dependencies/{{ ansible_os_family }}.yml
+
+- include: system.yml
+
+- include: install.yml
+
+- include: configure.yml
+
+- include: users.yml
+
+- include: certs.yml
+  when: taskd_selfsigned | bool
+
+- include: clients.yml

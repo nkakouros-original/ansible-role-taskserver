@@ -1,0 +1,50 @@
+---
+
+- name: Ensure download directory exists
+  file:
+    path: "{{ taskd_selfsigned_clients_download_dir }}"
+    state: directory
+    owner: "{{ lookup('env', 'USER') }}"
+    group: "{{ lookup('env', 'USER') }}"
+  delegate_to: localhost
+
+- name: Download client certificates
+  block:
+    - fetch:
+        src: "{{ taskd_user_cert_location }}/{{ item.name|replace(' ', '_')
+                }}.cert.pem"
+        dest: "{{ taskd_selfsigned_clients_download_dir }}/"
+        flat: true
+
+      loop: "{{ taskd_users }}"
+    - fetch:
+        src: "{{ taskd_user_cert_location }}/{{ item.name|replace(' ', '_')
+                }}.key.pem"
+        dest: "{{ taskd_selfsigned_clients_download_dir }}/"
+        flat: true
+      loop: "{{ taskd_users }}"
+    - fetch:
+        src: "{{ taskd_data_location }}/ca.cert.pem"
+        dest: "{{ taskd_selfsigned_clients_download_dir }}/"
+        flat: true
+  when: taskd_selfsigned_clients_download | bool
+
+- name: Create taskwarrior config
+  template:
+    src: taskwarrior.rc.j2
+    dest: "{{ taskd_taskwarrior_config_path }}"
+  loop: "{{ taskd_users }}"
+  loop_control:
+    index_var: index
+  when: "{{ taskd_taskwarrior_config }}"
+  delegate_to: localhost
+
+- name: Create android app config
+  template:
+    src: taskwarrior.android.rc.j2
+    dest: "{{ taskd_taskwarrior_config_path }}.android"
+  loop: "{{ taskd_users }}"
+  loop_control:
+    index_var: index
+  when: "{{ taskd_android_config }}"
+  delegate_to: localhost

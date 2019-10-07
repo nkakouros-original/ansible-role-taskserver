@@ -1,0 +1,60 @@
+---
+
+- name: Download taskd-server tarball
+  get_url:
+    url: "{{ taskd_tarball_url }}"
+    dest: "/tmp/taskd.tar.gz"
+  changed_when: false
+
+- name: Create install directory
+  file:
+    path: "{{ taskd_install_location }}"
+    owner: "{{ taskd_user }}"
+    group: "{{ taskd_group }}"
+    mode: 0o755
+    state: directory
+
+- name: Untar taskd-server tarball
+  unarchive:
+    src: "/tmp/taskd.tar.gz"
+    dest: "{{ taskd_install_location }}"
+    owner: "{{ taskd_user }}"
+    group: "{{ taskd_group }}"
+    mode: 0o755
+    remote_src: true
+    extra_opts:
+      - '--strip-components=1'
+
+- name: Cmake taskd-server
+  shell: cmake -DCMAKE_BUILD_TYPE=release .
+  args:
+    chdir: "{{ taskd_install_location }}"
+    creates: "{{ taskd_install_location }}/Makefile"
+
+- name: Make taskd-server
+  command: make
+  args:
+    chdir: "{{ taskd_install_location }}"
+    creates: "{{ taskd_install_location
+      }}/src/CMakeFiles/taskd_executable.dir/wcwidth6.cpp.o"
+
+- name: Make install taskd-server
+  command: make install
+  args:
+    chdir: "{{ taskd_install_location }}"
+    creates: /usr/local/bin/taskd
+
+- name: Upload systemd script
+  template:
+    src: taskd.service.jinja2
+    dest: /lib/systemd/system/taskd.service
+    owner: root
+    group: root
+    mode: 0o644
+
+- name: Start taskd service
+  systemd:
+    name: taskd
+    enabled: true
+    daemon_reload: true
+    state: started
