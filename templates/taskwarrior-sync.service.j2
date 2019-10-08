@@ -1,0 +1,10 @@
+[Unit]
+Description=Run taskwarrior synchronization
+
+[Service]
+User={{ taskd_taskwarrior_user }}
+Type=oneshot
+ExecStart=/usr/bin/task synchronize
+
+[Install]
+WantedBy=multi-user.target

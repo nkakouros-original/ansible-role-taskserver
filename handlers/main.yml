@@ -7,3 +7,11 @@
     daemon_reload: true
     state: restarted
   listen: taskd restart service
+
+- name: Restart taskwarrior-sync timer
+  service:
+    name: taskwarrior-sync.timer
+    enabled: true
+    daemon_reload: true
+    state: restarted
+  listen: taskd restart sync timer

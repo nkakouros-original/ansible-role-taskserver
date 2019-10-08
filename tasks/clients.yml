@@ -10,21 +10,23 @@
 
 - name: Download client certificates
   block:
-    - fetch:
+    - name: Download user client certs
+      fetch:
         src: "{{ taskd_user_cert_location }}/{{ item.name|replace(' ', '_')
                 }}.cert.pem"
         dest: "{{ taskd_selfsigned_clients_download_dir }}/"
         flat: true
-
       loop: "{{ taskd_users }}"
-    - fetch:
+    - name: Download user client keys
+      fetch:
         src: "{{ taskd_user_cert_location }}/{{ item.name|replace(' ', '_')
                 }}.key.pem"
         dest: "{{ taskd_selfsigned_clients_download_dir }}/"
         flat: true
       loop: "{{ taskd_users }}"
-    - fetch:
-        src: "{{ taskd_data_location }}/ca.cert.pem"
+    - name: Download CA certificate
+      fetch:
+        src: "{{ taskd_data_location }}/certs/ca.cert.pem"
         dest: "{{ taskd_selfsigned_clients_download_dir }}/"
         flat: true
   when: taskd_selfsigned_clients_download | bool
@@ -36,7 +38,7 @@
   loop: "{{ taskd_users }}"
   loop_control:
     index_var: index
-  when: taskd_taskwarrior_config | length > 0
+  when: taskd_produce_taskwarrior_config | bool
   delegate_to: localhost
 
 - name: Create android app config
@@ -46,5 +48,5 @@
   loop: "{{ taskd_users }}"
   loop_control:
     index_var: index
-  when: taskd_android_config | length > 0
+  when: taskd_produce_android_config | bool
   delegate_to: localhost

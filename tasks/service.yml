@@ -1,10 +1,22 @@
 ---
 
-- name: Upload systemd script
+- name: Upload taskd service file
   template:
-    src: taskd.service.jinja2
-    dest: /lib/systemd/system/taskd.service
+    src: taskd.service.j2
+    dest: /etc/systemd/system/taskd.service
     owner: root
     group: root
     mode: 0o644
   notify: taskd restart service
+
+- name: Upload task-sync service file and timer
+  template:
+    src: "{{ item }}"
+    dest: "/etc/systemd/system/{{ item | replace('.j2', '') }}"
+    owner: root
+    group: root
+    mode: 0o644
+  loop:
+    - taskwarrior-sync.service.j2
+    - taskwarrior-sync.timer.j2
+  notify: taskd restart sync timer

@@ -24,7 +24,7 @@
 
 - name: Create config file for taskd
   template:
-    src: taskd_config.jinja2
+    src: taskd_config.j2
     dest: "{{ taskd_data_location }}/config"
     owner: "{{ taskd_user }}"
     group: "{{ taskd_group }}"

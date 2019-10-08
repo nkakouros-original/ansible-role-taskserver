@@ -4,10 +4,14 @@ Status](https://travis-ci.com/nkakouros-original/ansible-role-taskserver.svg?bra
 
 # nkakouros.taskserver
 
-Ansible role to setup a Taskserver(taskd) for Taskwarrior
+Ansible role to setup a Taskserver(taskd) for Taskwarrior.
 
 This role follows closely the tutorial at
 https://gitpitch.com/GothenburgBitFactory/taskserver-setup
+
+It will install taskd as per the tutorial, download client certificates to be
+used in other devices and generate config snippets for configuring the android
+app among other things.
 
 Original work on the role was done by Wilmar den Ouden at
 https://github.com/wilmardo/ansible-role-taskserver. I relicensed it as GPLv3

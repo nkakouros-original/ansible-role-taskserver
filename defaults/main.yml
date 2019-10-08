@@ -93,7 +93,7 @@ taskd_selfsigned_clients_download_dir: ~
 # Integrations {{{
 # Whether to create a taskwarrior config file that can be included in a taskrc.
 # This will contain the taskserver info that taskwarrior needs to sync.
-taskd_taskwarrior_config: true
+taskd_produce_taskwarrior_config: true
 
 # The local path to create the taskwarrior config at.
 taskd_taskwarrior_config_path: ~
@@ -101,5 +101,5 @@ taskd_taskwarrior_config_path: ~
 # Whether to create an rc file containing settings to be copied-pasted in the
 # settings of the android taskwarrior app. The app is
 # https://search.f-droid.org/?q=taskwarrior
-taskd_android_config: true
+taskd_produce_android_config: true
 # }}}

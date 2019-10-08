@@ -1,0 +1,9 @@
+[Install]
+WantedBy=default.target
+
+[Unit]
+Description=Runs taskwarrior synchronization periodically.
+
+[Timer]
+OnCalendar=*:0/1
+Unit=taskwarrior-sync.service

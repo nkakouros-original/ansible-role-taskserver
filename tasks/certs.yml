@@ -1,18 +1,23 @@
 ---
 
-- name: Check if certificates have expired
-  openssl_certificate:
-    path: "{{ taskd_data_location }}/server.cert.pem"
-    provider: assertonly
-    has_expired: false
-  ignore_errors: true
-  register: _validity_check
+- name: Check if CA certificate exists
+  stat:
+    path: "{{ taskd_data_location }}/certs/server.cert.pem"
+  register: _result
+
+- name: Get CA certificate info
+  openssl_certificate_info:
+    path: "{{ taskd_data_location }}/certs/server.cert.pem"
+    valid_at:
+      now: "+0s"
+  register: _result
+  when: _result.stat.exists | bool
 
 - name: Generate certificates
   block:
     - name: Copy selfsigning vars file to location
       template:
-        src: ssl_vars.jinja2
+        src: ssl_vars.j2
         dest: "{{ taskd_install_location }}/pki/vars"
         owner: "{{ taskd_user }}"
         group: "{{ taskd_group }}"
@@ -71,4 +76,4 @@
       loop: "{{ taskd_users }}"
       loop_control:
         index_var: index
-  when: _validity_check is failed
+  when: _result is failed or _result is skipped
