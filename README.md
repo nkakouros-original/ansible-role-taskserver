@@ -15,7 +15,8 @@ None
 
 ## Role Variables
 
-Take a look at [defaults/main.yml] for documentation on the available variables.
+Take a look at [defaults/main.yml](defaults/main.yml) for documentation on the
+available variables.
 
 ### Default usage
 
