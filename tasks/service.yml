@@ -1,0 +1,10 @@
+---
+
+- name: Upload systemd script
+  template:
+    src: taskd.service.jinja2
+    dest: /lib/systemd/system/taskd.service
+    owner: root
+    group: root
+    mode: 0o644
+  notify: taskd restart service

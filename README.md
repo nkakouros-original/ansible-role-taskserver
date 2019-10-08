@@ -1,4 +1,8 @@
-# tterranigma.taskserver
+[![Build
+Status](https://travis-ci.com/nkakouros-original/ansible-role-taskserver.svg?branch=master)](https://travis-ci.com/nkakouros-original/ansible-role-taskserver)
+[![Galaxy](https://img.shields.io/badge/galaxy-nkakouros.taskserver-blue.svg)](https://galaxy.ansible.com/nkakouros/taskserver/)
+
+# nkakouros.taskserver
 
 Ansible role to setup a Taskserver(taskd) for Taskwarrior
 
