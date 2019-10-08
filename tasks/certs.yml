@@ -10,14 +10,6 @@
 
 - name: Generate certificates
   block:
-    - name: Create users and certs folder
-      file:
-        path: "{{ taskd_user_cert_location }}"
-        owner: "{{ taskd_user }}"
-        group: "{{ taskd_group }}"
-        mode: 0o755
-        state: directory
-
     - name: Copy selfsigning vars file to location
       template:
         src: ssl_vars.jinja2
@@ -35,7 +27,7 @@
     - name: Copy generated certs to data location
       copy:
         src: "{{ taskd_install_location }}/pki/{{ item }}"
-        dest: "{{ taskd_data_location }}/{{ item }}"
+        dest: "{{ taskd_data_location }}/certs/"
         owner: "{{ taskd_user }}"
         group: "{{ taskd_group }}"
         remote_src: true
@@ -43,6 +35,8 @@
         - server.cert.pem
         - server.key.pem
         - server.crl.pem
+        - client.cert.pem
+        - client.key.pem
         - ca.cert.pem
         - ca.key.pem
       when: taskd_server_certs is changed
@@ -56,6 +50,14 @@
                       item.name|replace(' ', '_') }}.key.pem"
       register: result
       loop: "{{ taskd_users }}"
+
+    - name: Create users and certs folder
+      file:
+        path: "{{ taskd_user_cert_location }}"
+        owner: "{{ taskd_user }}"
+        group: "{{ taskd_group }}"
+        mode: 0o755
+        state: directory
 
     - name: Move generated user certs
       command: >-
