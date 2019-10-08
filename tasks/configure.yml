@@ -7,11 +7,13 @@
     group: "{{ taskd_group }}"
     mode: 0o755
     state: directory
+  notify: taskd restart service
 
 - name: Set permanent TASKDDATA variable
   copy:
     content: "export TASKDDATA={{ taskd_data_location }}"
     dest: /etc/profile.d/taskd.sh
+  notify: taskd restart service
 
 - name: Init datafolder
   command: "taskd init"
@@ -26,3 +28,4 @@
     dest: "{{ taskd_data_location }}/config"
     owner: "{{ taskd_user }}"
     group: "{{ taskd_group }}"
+  notify: taskd restart service

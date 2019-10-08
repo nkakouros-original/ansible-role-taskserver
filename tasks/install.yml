@@ -43,18 +43,4 @@
   args:
     chdir: "{{ taskd_install_location }}"
     creates: /usr/local/bin/taskd
-
-- name: Upload systemd script
-  template:
-    src: taskd.service.jinja2
-    dest: /lib/systemd/system/taskd.service
-    owner: root
-    group: root
-    mode: 0o644
-
-- name: Start taskd service
-  systemd:
-    name: taskd
-    enabled: true
-    daemon_reload: true
-    state: started
+  notify: taskd restart service

@@ -3,5 +3,7 @@
 - name: Restart taskd service
   service:
     name: taskd
+    enabled: true
+    daemon_reload: true
     state: restarted
   listen: taskd restart service

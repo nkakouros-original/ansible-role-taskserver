@@ -1,21 +1,15 @@
 ---
 
-# Organizations to be created
-taskd_organizations:
-  - Public
-
-# The users to be created, organization must be in the taskd_organizations
-# variable!
-taskd_users:
-  - name: First Last
-    organization: Public
-
+# Installation {{{
 # Taskd version to install
 taskd_version: 1.1.0
 
 # Download url for taskd
 taskd_tarball_url:
   "https://taskwarrior.org/download/taskd-{{ taskd_version }}.tar.gz"
+
+# Set to true to re-install taskwarrior, eg to update it
+taskd_update: true
 
 # User taskd daemon runs as
 taskd_user: taskd
@@ -34,13 +28,26 @@ taskd_port: 53589
 taskd_install_location: /opt/taskd
 
 # Location for taskd data, sets the $TASKDDATA variable (recommended is to NOT
-# put it in your Taskd exec dir)
+# put it under your taskd exec dir)
 taskd_data_location: /var/taskd
 
-# Location to safe user.conf file to
+# Location to save user.conf file to
 taskd_user_conf_location: /var/taskd/users
+# }}}
+# Users {{{
+# Organizations to be created
+taskd_organizations:
+  - Public
 
-# Location to safe user certificates to
+# The users to be created, organization must be in the taskd_organizations
+# variable as well!
+taskd_users:
+  - name: First Last
+    organization: Public
+
+# }}}
+# Certificates {{{
+# Location to save user certificates to
 taskd_user_cert_location: /var/taskd/users/certs
 
 # Variables for ssl certs (defaults for selfsigned). Can be used to use signed
@@ -82,7 +89,8 @@ taskd_selfsigned_clients_download: true
 # Where to download the client certificates if
 # `taskd_selfsigned_clients_download` is true
 taskd_selfsigned_clients_download_dir: ~
-
+# }}}
+# Integrations {{{
 # Whether to create a taskwarrior config file that can be included in a taskrc.
 # This will contain the taskserver info that taskwarrior needs to sync.
 taskd_taskwarrior_config: true
@@ -94,3 +102,4 @@ taskd_taskwarrior_config_path: ~
 # settings of the android taskwarrior app. The app is
 # https://search.f-droid.org/?q=taskwarrior
 taskd_android_config: true
+# }}}

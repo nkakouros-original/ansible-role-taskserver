@@ -36,7 +36,7 @@
   loop: "{{ taskd_users }}"
   loop_control:
     index_var: index
-  when: "{{ taskd_taskwarrior_config }}"
+  when: taskd_taskwarrior_config | length > 0
   delegate_to: localhost
 
 - name: Create android app config
@@ -46,5 +46,5 @@
   loop: "{{ taskd_users }}"
   loop_control:
     index_var: index
-  when: "{{ taskd_android_config }}"
+  when: taskd_android_config | length > 0
   delegate_to: localhost
