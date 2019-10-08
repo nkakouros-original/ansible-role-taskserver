@@ -52,12 +52,13 @@ taskd_user_cert_location: /var/taskd/users/certs
 
 # Variables for ssl certs (defaults for selfsigned). Can be used to use signed
 # certificates already stored on the server
-taskd_client_cert: "{{ taskd_data_location }}/client.cert.pem"
-taskd_client_key: "{{ taskd_data_location }}/client.key.pem"
-taskd_server_cert: "{{ taskd_data_location }}/server.cert.pem"
-taskd_server_key: "{{ taskd_data_location }}/server.key.pem"
-taskd_server_crl: "{{ taskd_data_location }}/server.crl.pem"
-taskd_ca_cert: "{{ taskd_data_location }}/ca.cert.pem"
+taskd_client_cert: "{{ taskd_data_location }}/certs/client.cert.pem"
+taskd_client_key: "{{ taskd_data_location }}/certs/client.key.pem"
+taskd_server_cert: "{{ taskd_data_location }}/certs/server.cert.pem"
+taskd_server_key: "{{ taskd_data_location }}/certs/server.key.pem"
+taskd_server_crl: "{{ taskd_data_location }}/certs/server.crl.pem"
+taskd_ca_cert: "{{ taskd_data_location }}/certs/ca.cert.pem"
+taskd_ca_key: "{{ taskd_data_location }}/certs/ca.key.pem"
 
 # Set to false to disable the generation of selfsigned certificates
 taskd_selfsigned: true

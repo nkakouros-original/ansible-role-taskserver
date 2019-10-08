@@ -2,12 +2,12 @@
 
 - name: Check if CA certificate exists
   stat:
-    path: "{{ taskd_data_location }}/certs/server.cert.pem"
+    path: "{{ taskd_ca_cert }}"
   register: _result
 
 - name: Get CA certificate info
   openssl_certificate_info:
-    path: "{{ taskd_data_location }}/certs/server.cert.pem"
+    path: "{{ taskd_ca_cert }}"
     valid_at:
       now: "+0s"
   register: _result
@@ -27,24 +27,32 @@
       args:
         creates: "{{ taskd_install_location }}/pki/ca.key.pem"
         chdir: "{{ taskd_install_location }}/pki/"
-      register: taskd_server_certs
 
     - name: Copy generated certs to data location
       copy:
-        src: "{{ taskd_install_location }}/pki/{{ item }}"
-        dest: "{{ taskd_data_location }}/certs/"
+        src: "{{ taskd_install_location }}/pki/{{ item.0 }}"
+        dest: "{{ lookup('vars', item.1) }}"
         owner: "{{ taskd_user }}"
         group: "{{ taskd_group }}"
         remote_src: true
-      loop:
-        - server.cert.pem
-        - server.key.pem
-        - server.crl.pem
-        - client.cert.pem
-        - client.key.pem
-        - ca.cert.pem
-        - ca.key.pem
-      when: taskd_server_certs is changed
+      loop: "{{ list1 | zip(list2) | list }}"
+      vars:
+        list1:
+          - server.cert.pem
+          - server.key.pem
+          - server.crl.pem
+          - client.cert.pem
+          - client.key.pem
+          - ca.cert.pem
+          - ca.key.pem
+        list2:
+          - taskd_server_cert
+          - taskd_server_key
+          - taskd_server_crl
+          - taskd_client_cert
+          - taskd_client_key
+          - taskd_ca_cert
+          - taskd_ca_key
       notify: taskd restart service
 
     - name: Run generate client cert script
@@ -56,7 +64,7 @@
       register: result
       loop: "{{ taskd_users }}"
 
-    - name: Create users and certs folder
+    - name: Create user certs folder
       file:
         path: "{{ taskd_user_cert_location }}"
         owner: "{{ taskd_user }}"
