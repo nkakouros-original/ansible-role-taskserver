@@ -1,7 +1,7 @@
 ---
 
 galaxy_info:
-  role_name: tterranigma.taskserver
+  role_name: taskserver
   author: Nikolaos Kakouros
   description: Installs the Taskwarrior taskserver (taskd)
 
@@ -26,7 +26,7 @@ galaxy_info:
         - jessie
         - wheezy
 
-  categories:
+  galaxy_tags:
     - taskwarrior
     - taskserver
     - taskd
