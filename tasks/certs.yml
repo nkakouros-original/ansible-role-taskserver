@@ -14,6 +14,7 @@
   when: _result.stat.exists | bool
 
 - name: Generate certificates
+  # when: _result is failed or _result is skipped or not _result.valid_at.now | bool
   block:
     - name: Copy selfsigning vars file to location
       template:
@@ -22,10 +23,10 @@
         owner: "{{ taskd_user }}"
         group: "{{ taskd_group }}"
 
+    # TODO allow renewing certs
     - name: Run generate cert script
       shell: ./generate
       args:
-        creates: "{{ taskd_install_location }}/pki/ca.key.pem"
         chdir: "{{ taskd_install_location }}/pki/"
 
     - name: Copy generated certs to data location
@@ -59,8 +60,6 @@
       shell: "./generate.client {{ item.name|replace(' ', '_') }}"
       args:
         chdir: "{{ taskd_install_location }}/pki/"
-        creates: "{{ taskd_user_cert_location }}/{{
-                      item.name|replace(' ', '_') }}.key.pem"
       register: result
       loop: "{{ taskd_users }}"
 
@@ -84,4 +83,3 @@
       loop: "{{ taskd_users }}"
       loop_control:
         index_var: index
-  when: _result is failed or _result is skipped
